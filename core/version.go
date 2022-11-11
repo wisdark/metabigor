@@ -1,8 +1,12 @@
 package core
 
+import "fmt"
+
 const (
-	// VERSION current Metabigor version
-	VERSION = "beta v1.10"
-	// AUTHOR author of this
+	// VERSION current version of this project
+	VERSION = "v1.2.1"
+	// AUTHOR of this project
 	AUTHOR = "@j3ssiejjj"
 )
+
+var DESC = fmt.Sprintf(`Metabigor - OSINT tools and more but without API key - %v by %v`, VERSION, AUTHOR)

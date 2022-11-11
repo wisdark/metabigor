@@ -16,8 +16,8 @@ import (
 func init() {
 	var scanCmd = &cobra.Command{
 		Use:   "scan",
-		Short: "Wrapper to run scan from input",
-		Long:  fmt.Sprintf(`Metabigor - Intelligence Tool but without API key - %v by %v`, core.VERSION, core.AUTHOR),
+		Short: "Wrapper to run port scan from provided input",
+		Long:  core.DESC,
 		RunE:  runScan,
 	}
 	// scan options
@@ -57,29 +57,17 @@ func runScan(cmd *cobra.Command, _ []string) error {
 		options.Scan.SkipOverview = true
 	}
 
-	if options.Input == "-" || options.Input == "" {
-		core.ErrorF("No input found")
-		os.Exit(1)
-	}
-
-	var inputs []string
-	if strings.Contains(options.Input, "\n") {
-		inputs = strings.Split(options.Input, "\n")
-	} else {
-		inputs = append(inputs, options.Input)
-	}
-
 	// make sure input is valid
 	if options.Scan.IPv4 {
 		// only filter when run zmap
 		if !options.Scan.SkipOverview {
-			inputs = core.FilterIpv4(inputs)
+			options.Inputs = core.FilterIpv4(options.Inputs)
 		}
 	}
 	if uniq {
-		inputs = funk.UniqString(inputs)
+		options.Inputs = funk.UniqString(options.Inputs)
 	}
-	if len(inputs) == 0 {
+	if len(options.Inputs) == 0 {
 		core.ErrorF("No input provided")
 		os.Exit(1)
 	}
@@ -89,7 +77,7 @@ func runScan(cmd *cobra.Command, _ []string) error {
 	jobs := make(chan string)
 
 	if options.Scan.All || options.Scan.ZmapOverview {
-		options.Scan.InputFile = StoreTmpInput(inputs, options)
+		options.Scan.InputFile = StoreTmpInput(options.Inputs, options)
 		core.DebugF("Store temp input in: %v", options.Scan.InputFile)
 
 		if options.Scan.ZmapOverview {
@@ -127,7 +115,6 @@ func runScan(cmd *cobra.Command, _ []string) error {
 		}
 		StoreData(result, options)
 		return nil
-
 	}
 
 	for i := 0; i < options.Concurrency; i++ {
@@ -146,7 +133,7 @@ func runScan(cmd *cobra.Command, _ []string) error {
 		}()
 	}
 
-	for _, input := range inputs {
+	for _, input := range options.Inputs {
 		jobs <- input
 	}
 
@@ -295,6 +282,8 @@ func StoreTmpInput(raw []string, options core.Options) string {
 func ScanHelp(cmd *cobra.Command, _ []string) {
 	fmt.Println(cmd.UsageString())
 	h := "\nExample Commands:\n"
+	h += "  # Run Nmap with output from rustscan\n"
+	h += "  echo '1.2.3.4 -> [80,443,2222]' | metabigor scan -R\n"
 	h += "  # Only run masscan full ports\n"
 	h += "  echo '1.2.3.4/24' | metabigor scan -o result.txt\n\n"
 	h += "  # Only run nmap detail scan\n"
