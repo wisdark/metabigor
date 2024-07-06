@@ -2,6 +2,12 @@ package cmd
 
 import (
 	"fmt"
+	"net"
+	"net/netip"
+	"os"
+	"strings"
+	"sync"
+
 	"github.com/j3ssie/metabigor/core"
 	"github.com/j3ssie/metabigor/modules"
 	jsoniter "github.com/json-iterator/go"
@@ -9,11 +15,6 @@ import (
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	"github.com/thoas/go-funk"
-	"inet.af/netaddr"
-	"net"
-	"os"
-	"strings"
-	"sync"
 )
 
 func init() {
@@ -169,7 +170,7 @@ func genOutput(asnInfo modules.ASInfo) string {
 func searchByIP(input string) []modules.ASInfo {
 	var asnInfo []modules.ASInfo
 
-	ip, err := netaddr.ParseIP(input)
+	ip, err := netip.ParseAddr(input)
 	if err != nil {
 		return asnInfo
 	}

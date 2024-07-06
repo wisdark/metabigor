@@ -18,9 +18,22 @@ Metabigor is Intelligence tool, its goal is to do OSINT tasks and more but witho
 
 # Installation
 
+### Pre-built Binaries
+
+You can download pre-built binaries for your platform from the [releases page](https://github.com/j3ssie/metabigor/releases). Choose the appropriate binary for your operating system and architecture, download it, and place it in your `PATH`. 
+
+If the binary fails to execute, consider incorporating this into your environment: `export ASSUME_NO_MOVING_GC_UNSAFE_RISK_IT_WITH=go1.20`.
+
+### Building from Source
+
+To install this project from source, you'll need Go installed on your system. If you haven't installed Go yet, you can follow the official installation instructions [here](https://golang.org/doc/install).
+
 ```shell
-go install github.com/j3ssie/metabigor@latest
+git clone https://github.com/j3ssie/metabigor.git
+cd metabigor
+go install
 ```
+
 
 # Main features
 
@@ -134,10 +147,10 @@ echo '1.2.3.4' | metabigor ip -json
 
 *** 
 
-# Painless integrate Metabigor into your recon workflow?
+## Painless integrate Metabigor into your recon workflow?
 
 <p align="center">
-  <img alt="OsmedeusEngine" src="https://raw.githubusercontent.com/osmedeus/assets/main/logo-transparent.png" height="200" />
+  <img alt="OsmedeusEngine" src="https://raw.githubusercontent.com/osmedeus/assets/main/part-of-osmedeus-banner.png" />
   <p align="center">
     This project was part of Osmedeus Engine. Check out how it was integrated at <a href="https://twitter.com/OsmedeusEngine">@OsmedeusEngine</a>
   </p>
